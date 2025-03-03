@@ -20,7 +20,7 @@
    "include": [
       "src/**/*",
       "src/service-worker.ts"
-   ],
+, "public/worker.ts"   ],
    "exclude": [
       "node_modules", // Thư mục nào sẽ không được biên dịch
       "**/*.spec.ts" // Bỏ qua các tệp kiểm thử

@@ -3,7 +3,7 @@ const urlsToCache = [
   "/",
   "/index.html",
   "/public/assets/landscape.webp",
-  "/manifest.json",
+  // "/manifest.json",
 ];
 
 self.addEventListener("install", (event) => {
