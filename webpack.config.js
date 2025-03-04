@@ -1,9 +1,9 @@
 import path from "path";
 import TerserPlugin from "terser-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
-import WorkboxPlugin from "workbox-webpack-plugin";
-import CopyWebpackPlugin from 'copy-webpack-plugin';
-import { fileURLToPath } from 'url';
+import { InjectManifest } from "workbox-webpack-plugin";
+import CopyWebpackPlugin from "copy-webpack-plugin";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,7 +20,7 @@ export default {
   },
   output: {
     filename: "[name].[contenthash].js",
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, "dist"),
     publicPath: "/",
     clean: true,
   },
@@ -60,7 +60,7 @@ export default {
       new TerserPlugin({
         terserOptions: {
           compress: {
-            drop_console: true, // Loại bỏ console.log
+            drop_console: false, // Loại bỏ console.log
           },
           // mangle: false, // Làm rối tên biến
           output: {
@@ -82,19 +82,23 @@ export default {
         minifyCSS: true, // Nén CSS
       },
     }),
-    new WorkboxPlugin.GenerateSW({
-      // these options encourage the ServiceWorkers to get in there fast
-      // and not allow any straggling "old" SWs to hang around
-      clientsClaim: true,
-      skipWaiting: true,
-      include: [/\.html$/, /\.js$/, /\.css$/, /\.png$/, /\.webp$/, /\.svg$/], 
+    // new WorkboxPlugin.GenerateSW({
+    //   // these options encourage the ServiceWorkers to get in there fast
+    //   // and not allow any straggling "old" SWs to hang around
+    //   clientsClaim: true,
+    //   skipWaiting: true,
+    //   include: [/\.html$/, /\.js$/, /\.css$/, /\.png$/, /\.webp$/, /\.svg$/],
+    // }),
+    new InjectManifest({
+      swSrc: "./src/serviceWorker.js", // Đường dẫn đến file Service Worker gốc
+      swDest: "service-worker.js", // Tên file Service Worker đầu ra
     }),
     new CopyWebpackPlugin({
-        patterns: [
-          { from: 'public/manifest.json', to: 'manifest.json' }, // Sao chép manifest.json
-          { from: 'public/icons', to: 'icons' }, // Sao chép thư mục icons (nếu có)
-        ],
-      }),
+      patterns: [
+        { from: "public/manifest.json", to: "manifest.json" }, // Sao chép manifest.json
+        { from: "public/icons", to: "icons" }, // Sao chép thư mục icons (nếu có)
+      ],
+    }),
   ],
   devtool: "source-map",
   mode: "production",

@@ -8,7 +8,7 @@ const WebWorker = () => {
 
     const handleCalculate = () => {
         setLoading(true);
-        const worker = new Worker(new URL('./worker.js', window.location.origin));
+        const worker = new Worker(new URL('../../worker/testWorker.ts', import.meta.url));
 
         worker.onmessage = (e: MessageEvent) => {
             setResult(e.data); // Nhận kết quả từ worker
@@ -20,7 +20,7 @@ const WebWorker = () => {
 
     return (
         <div>
-            <h1>Web Worker Example</h1>
+            <h1>Web Worker Example update</h1>
             <input
                 type="number"
                 value={number}
