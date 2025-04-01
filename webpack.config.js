@@ -4,6 +4,7 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 import { InjectManifest } from "workbox-webpack-plugin";
 import CopyWebpackPlugin from "copy-webpack-plugin";
 import { fileURLToPath } from "url";
+import Dotenv from "dotenv-webpack";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,6 +25,14 @@ export default {
     publicPath: "/",
     clean: true,
   },
+  resolve: {
+    alias: {
+      "@pages": path.resolve(__dirname, "src/pages/"),
+      "@store": path.resolve(__dirname, "src/store/"),
+    },
+    extensions: [".ts", ".tsx"], // Thêm các đuôi file cần thiết
+  },
+
   module: {
     rules: [
       {
@@ -52,9 +61,9 @@ export default {
     extensions: [".js", ".jsx", ".ts", ".tsx"], // Thêm các phần mở rộng
   },
   optimization: {
-    splitChunks: {
-      chunks: "all",
-    },
+    // splitChunks: {
+    //   chunks: "all",
+    // },
     minimize: true,
     minimizer: [
       new TerserPlugin({
@@ -62,7 +71,7 @@ export default {
           compress: {
             drop_console: false, // Loại bỏ console.log
           },
-          // mangle: false, // Làm rối tên biến
+          mangle: false, // Làm rối tên biến
           output: {
             comments: false, // Loại bỏ comment
           },
@@ -99,6 +108,7 @@ export default {
         { from: "public/icons", to: "icons" }, // Sao chép thư mục icons (nếu có)
       ],
     }),
+    new Dotenv(), // Load biến từ file .env
   ],
   devtool: "source-map",
   mode: "production",

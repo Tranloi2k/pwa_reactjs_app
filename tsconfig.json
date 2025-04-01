@@ -2,7 +2,11 @@
    "compilerOptions": {
       "target": "es6", // Đặt phiên bản ECMAScript đầu ra
       "module": "esnext", // Đặt kiểu module
-      "lib": ["dom", "es6", "webworker"],
+      "lib": [
+         "dom",
+         "es6",
+         "webworker"
+      ],
       "strict": true, // Bật tất cả các kiểm tra nghiêm ngặt
       "esModuleInterop": true, // Bật tương thích với ES Modules
       "skipLibCheck": true, // Bỏ qua kiểm tra các tệp khai báo
@@ -10,8 +14,17 @@
       "baseUrl": "./", // Căn cứ cho các đường dẫn tương đối
       "paths": {
          "*": [
-            "src/*"
-         ] // Cấu hình alias
+            "src/*",
+         ],
+         "@page/*": [
+            "src/page/*"
+         ],
+         "@store/*": [
+            "src/store/*"
+         ],
+         "@store": [
+            "src/store"
+         ],
       },
       "outDir": "./dist", // Đường dẫn đầu ra cho tệp biên dịch
       "moduleResolution": "node", // Cách giải quyết module
@@ -19,8 +32,9 @@
    },
    "include": [
       "src/**/*",
-      "src/service-worker.ts"
-, "public/worker.ts"   ],
+      "src/service-worker.ts",
+      "public/worker.ts"
+   ],
    "exclude": [
       "node_modules", // Thư mục nào sẽ không được biên dịch
       "**/*.spec.ts" // Bỏ qua các tệp kiểm thử
