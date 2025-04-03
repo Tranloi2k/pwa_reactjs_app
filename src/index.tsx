@@ -11,4 +11,4 @@ root.render(
   </StrictMode>
 );
 
-serviceWorkerRegistration.register();
+// serviceWorkerRegistration.register();

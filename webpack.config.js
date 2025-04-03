@@ -5,6 +5,10 @@ import { InjectManifest } from "workbox-webpack-plugin";
 import CopyWebpackPlugin from "copy-webpack-plugin";
 import { fileURLToPath } from "url";
 import Dotenv from "dotenv-webpack";
+import webpack from "webpack";
+
+// Import the fallback modules using ES module imports
+import process from "process";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,12 +16,12 @@ const __dirname = path.dirname(__filename);
 export default {
   entry: {
     app: path.resolve("src/index"),
-    // serviceWorker: path.resolve("public/service-worker.js"),
-  }, // Đảm bảo rằng điểm vào là tệp TypeScript
+  },
   devServer: {
-    historyApiFallback: true, // Thêm dòng này
+    historyApiFallback: true,
     compress: true,
-    port: 8080, // Hoặc cổng bạn muốn
+    port: 8080,
+    hot: true,
   },
   output: {
     filename: "[name].[contenthash].js",
@@ -30,26 +34,36 @@ export default {
       "@pages": path.resolve(__dirname, "src/pages/"),
       "@store": path.resolve(__dirname, "src/store/"),
     },
-    extensions: [".ts", ".tsx"], // Thêm các đuôi file cần thiết
+    extensions: [".ts", ".tsx", ".js", ".jsx"],
+    fallback: {
+      process: false, // We're providing it via ProvidePlugin
+      buffer: false,
+      util: false,
+      stream: false,
+      assert: false,
+      crypto: false,
+      http: false,
+      https: false,
+      os: false,
+      url: false,
+      zlib: false,
+      path: false,
+      fs: false,
+    },
   },
-
   module: {
     rules: [
       {
         test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
-        use: "ts-loader", // Sử dụng ts-loader để biên dịch TypeScript
+        use: "ts-loader",
       },
       {
-        test: /\.(png|jpe?g|gif|svg|webp)$/i, // Các tệp hình ảnh
-        use: [
-          {
-            loader: "file-loader", // Sử dụng file-loader
-            options: {
-              name: "[path][name].[ext]", // Cấu hình tên tệp
-            },
-          },
-        ],
+        test: /\.(png|jpe?g|gif|svg|webp)$/i,
+        type: "asset/resource",
+        generator: {
+          filename: "assets/images/[name][ext]",
+        },
       },
       {
         test: /\.css$/,
@@ -57,58 +71,76 @@ export default {
       },
     ],
   },
-  resolve: {
-    extensions: [".js", ".jsx", ".ts", ".tsx"], // Thêm các phần mở rộng
-  },
   optimization: {
-    // splitChunks: {
-    //   chunks: "all",
-    // },
     minimize: true,
     minimizer: [
       new TerserPlugin({
         terserOptions: {
           compress: {
-            drop_console: false, // Loại bỏ console.log
+            drop_console: false,
           },
-          mangle: false, // Làm rối tên biến
+          mangle: false,
           output: {
-            comments: false, // Loại bỏ comment
+            comments: false,
           },
         },
         extractComments: false,
       }),
     ],
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          chunks: "all",
+        },
+      },
+    },
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      process: "process",
+      Buffer: ["buffer", "Buffer"],
+      stream: "stream-browserify",
+      util: "util",
+      assert: "assert",
+      http: "stream-http",
+      https: "https-browserify",
+      os: "os-browserify/browser",
+      url: "url",
+      zlib: "browserify-zlib",
+      path: "path-browserify",
+    }),
+    // new webpack.DefinePlugin({
+    //   "process.env.NODE_ENV": JSON.stringify(
+    //     process.env.NODE_ENV || "development"
+    //   ),
+    // }),
     new HtmlWebpackPlugin({
       title: "Progressive Web Application",
       template: path.join("public", "index.html"),
       minify: {
-        removeComments: true, // Loại bỏ comment
-        collapseWhitespace: true, // Nén khoảng trắng
-        removeAttributeQuotes: true, // Loại bỏ dấu nháy quanh thuộc tính
-        minifyCSS: true, // Nén CSS
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true,
+        minifyCSS: true,
       },
     }),
-    // new WorkboxPlugin.GenerateSW({
-    //   // these options encourage the ServiceWorkers to get in there fast
-    //   // and not allow any straggling "old" SWs to hang around
-    //   clientsClaim: true,
-    //   skipWaiting: true,
-    //   include: [/\.html$/, /\.js$/, /\.css$/, /\.png$/, /\.webp$/, /\.svg$/],
+    // new InjectManifest({
+    //   swSrc: "./src/serviceWorker.js",
+    //   swDest: "service-worker.js",
     // }),
-    new InjectManifest({
-      swSrc: "./src/serviceWorker.js", // Đường dẫn đến file Service Worker gốc
-      swDest: "service-worker.js", // Tên file Service Worker đầu ra
-    }),
     new CopyWebpackPlugin({
       patterns: [
-        { from: "public/manifest.json", to: "manifest.json" }, // Sao chép manifest.json
-        { from: "public/icons", to: "icons" }, // Sao chép thư mục icons (nếu có)
+        { from: "public/manifest.json", to: "manifest.json" },
+        { from: "public/icons", to: "icons" },
+        { from: "public/robots.txt", to: "robots.txt" },
       ],
     }),
-    new Dotenv(), // Load biến từ file .env
+    new Dotenv({
+      systemvars: true,
+    }),
   ],
   devtool: "source-map",
   mode: "production",

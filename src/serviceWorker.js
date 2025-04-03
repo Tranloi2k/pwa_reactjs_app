@@ -26,6 +26,7 @@ const PRE_CACHE_ASSETS = [
 const API_ENDPOINTS = [
   "/products", // API sản phẩm
   "/users", // Thêm các API khác nếu cần
+  "/ws",
 ];
 
 // ========== Cài đặt Service Worker ========== //

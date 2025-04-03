@@ -1,6 +1,7 @@
 // src/Login.js
 import React, { useState } from "react";
 import axiosInstance from "../../config/axios";
+import GoogleLoginButton from "./GoogleLoginButton";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -45,6 +46,7 @@ const Login = () => {
         />
         <button type="submit">Login</button>
       </form>
+      <GoogleLoginButton />
       <p>{message}</p>
     </div>
   );
