@@ -7,12 +7,14 @@ import {
 import axiosInstance from "../../config/axios";
 
 function GoogleLoginButton() {
+  const beUrl = process.env.REACT_APP_BE_URL;
+  const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID as string;
   const handleGoogleLoginSuccess = async (
     credentialResponse: CredentialResponse
   ) => {
     try {
       const response: { accessToken: string; refreshToken: string } =
-        await axiosInstance.post("http://localhost:5000/google", {
+        await axiosInstance.post(`${beUrl}/google`, {
           token: credentialResponse.credential,
         });
       console.log(response);
@@ -24,7 +26,7 @@ function GoogleLoginButton() {
   };
 
   return (
-    <GoogleOAuthProvider clientId="375207417006-u77a0k3mnbi6coog727rd590ipo524lc.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={clientId}>
       <GoogleLogin
         onSuccess={handleGoogleLoginSuccess}
         onError={() => console.log("Đăng nhập thất bại")}
