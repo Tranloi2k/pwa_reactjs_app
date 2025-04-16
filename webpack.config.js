@@ -6,9 +6,9 @@ import CopyWebpackPlugin from "copy-webpack-plugin";
 import { fileURLToPath } from "url";
 import Dotenv from "dotenv-webpack";
 import webpack from "webpack";
+import postcssConfig from "./postcss.config.js";
 
 // Import the fallback modules using ES module imports
-import process from "process";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,21 +35,6 @@ export default {
       "@store": path.resolve(__dirname, "src/store/"),
     },
     extensions: [".ts", ".tsx", ".js", ".jsx"],
-    fallback: {
-      process: false, // We're providing it via ProvidePlugin
-      buffer: false,
-      util: false,
-      stream: false,
-      assert: false,
-      crypto: false,
-      http: false,
-      https: false,
-      os: false,
-      url: false,
-      zlib: false,
-      path: false,
-      fs: false,
-    },
   },
   module: {
     rules: [
@@ -67,7 +52,16 @@ export default {
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"],
+        use: [
+          "style-loader",
+          "css-loader",
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: postcssConfig,
+            },
+          },
+        ],
       },
     ],
   },

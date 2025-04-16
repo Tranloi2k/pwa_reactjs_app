@@ -1,4 +1,13 @@
- body {
+@import "tailwindcss";
+
+body {
    font-family: "Inter", serif;
 }
  
+
+/* Thêm vào file CSS của bạn */
+@layer utilities {
+  .ph-gray-400::placeholder {
+    color: #9CA3AF;
+  }
+}

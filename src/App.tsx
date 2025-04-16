@@ -3,13 +3,17 @@ import AppRoutes from "./routes";
 import "./index.css";
 import { Provider } from "react-redux";
 import store from "./store";
+import { ApolloProvider } from "@apollo/client";
+import client from "./config/apolo";
 
 export default function App() {
   return (
-    <Provider store={store}>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </Provider>
+    <ApolloProvider client={client}>
+      <Provider store={store}>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </Provider>
+    </ApolloProvider>
   );
 }
