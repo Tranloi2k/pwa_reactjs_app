@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { useLocation, useNavigate, Link, Outlet } from "react-router-dom";
+import { useLocation, Link, Outlet } from "react-router-dom";
 import { debounce } from "lodash";
 
 interface NavigationItem {
@@ -16,7 +16,6 @@ interface NavigationGroup {
 
 const Layout = () => {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
