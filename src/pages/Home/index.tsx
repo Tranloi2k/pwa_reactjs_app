@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import landscape from "../../assets/landscape.webp";
 import landscapeSmall from "../../assets/landscape_small.webp";
@@ -15,6 +14,7 @@ const Home = () => {
         const response = await axiosInstance.get("/products");
         console.log(response);
         setMessage(response.data);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         setMessage("Access denied: " + (error.response?.data || error.message));
       }

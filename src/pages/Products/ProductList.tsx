@@ -46,17 +46,6 @@ import {
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  rating: number;
-  reviewCount: number;
-  image: string;
-  isNew?: boolean;
-  discount?: number;
-}
-
 const ProductList = () => {
   const [isFavoriteMap, setIsFavoriteMap] = useState<Record<number, boolean>>(
     {}

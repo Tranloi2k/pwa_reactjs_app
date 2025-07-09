@@ -2,7 +2,6 @@ import MainLayout from "./components/layout/MainLayout";
 import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router";
 
-const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/About"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const WebWorker = lazy(() => import("./pages/WebWorker"));

@@ -347,7 +347,7 @@ const ProductDetail = () => {
                 </div>
                 <div>
                   <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    What's in the Box
+                    What is in the Box
                   </h3>
                   <ul className="space-y-2">
                     {productDetail.accessories.map((item, index) => (
