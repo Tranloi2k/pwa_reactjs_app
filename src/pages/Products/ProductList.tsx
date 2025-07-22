@@ -1,41 +1,7 @@
-// import { useEffect } from "react";
+import { useEffect, useState } from "react";
 // import { useDispatch, useSelector } from "react-redux";
 // import { fetchProducts } from "../../store/slice/products";
 // import { AppDispatch, RootState } from "../../store";
-
-// const ProductList = () => {
-//   const dispatch = useDispatch<AppDispatch>();
-//   const {
-//     items: products,
-//     loading,
-//     error,
-//   } = useSelector((state: RootState) => state.products);
-
-//   useEffect(() => {
-//     dispatch(fetchProducts());
-//   }, [dispatch]);
-
-//   if (loading) return <div>Loading products...</div>;
-//   if (error) return <div>Error: {error}</div>;
-
-//   return (
-//     <div>
-//       <h2>Products</h2>
-//       <ul>
-//         {products.map((product) => (
-//           <li key={product.id}>{product.name}</li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// };
-
-// export default ProductList;
-
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../../store/slice/products";
-import { AppDispatch, RootState } from "../../store";
 import {
   StarIcon,
   HeartIcon,
@@ -45,6 +11,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
+import { Product } from "../../types/product";
+import { useGetPostsQuery } from "../../store/api/productApi";
 
 const ProductList = () => {
   const [isFavoriteMap, setIsFavoriteMap] = useState<Record<number, boolean>>(
@@ -53,101 +21,31 @@ const ProductList = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [sortOption, setSortOption] = useState<string>("popular");
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [products, setProducts] = useState<Product[]>([]); // Replace 'any' with your product type
   const productsPerPage = 8;
 
-  const dispatch = useDispatch<AppDispatch>();
-  const {
-    items: products,
-    loading,
-    error,
-  } = useSelector((state: RootState) => state.products);
+  // const dispatch = useDispatch<AppDispatch>();
+  // const {
+  //   items: products,
+  //   loading,
+  //   error,
+  // } = useSelector((state: RootState) => state.products);
+
+  // useEffect(() => {
+  //   dispatch(fetchProducts());
+  // }, [dispatch]);
+
+  const { data, error, isLoading } = useGetPostsQuery();
 
   useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
+    console.log(data);
+    if (data?.products) {
+      setProducts(data.products);
+    }
+  }, [data]);
 
-  if (loading) return <div>Loading products...</div>;
-  if (error) return <div>Error: {error}</div>;
-
-  // const products: Product[] = [
-  //   {
-  //     id: 1,
-  //     name: "iPhone 15 Pro",
-  //     price: 999,
-  //     rating: 4.8,
-  //     reviewCount: 1245,
-  //     image:
-  //       "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-1inch?wid=5120&hei=2880&fmt=p-jpg&qlt=80&.v=1693009279096",
-  //     isNew: true,
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "iPhone 15",
-  //     price: 799,
-  //     rating: 4.7,
-  //     reviewCount: 892,
-  //     image:
-  //       "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-finish-select-202309-6-1inch-black?wid=5120&hei=2880&fmt=p-jpg&qlt=80&.v=1692923777978",
-  //     discount: 10,
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "iPhone 14",
-  //     price: 699,
-  //     rating: 4.6,
-  //     reviewCount: 2103,
-  //     image:
-  //       "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-14-finish-select-202209-6-1inch-product-red?wid=5120&hei=2880&fmt=p-jpg&qlt=80&.v=1661027202348",
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "iPhone 13",
-  //     price: 599,
-  //     rating: 4.5,
-  //     reviewCount: 3567,
-  //     image:
-  //       "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-13-starlight-select-2021?wid=5120&hei=2880&fmt=p-jpg&qlt=80&.v=1629907845000",
-  //     discount: 15,
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "MacBook Air M2",
-  //     price: 1199,
-  //     rating: 4.9,
-  //     reviewCount: 876,
-  //     image:
-  //       "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/macbook-air-midnight-select-20220606?wid=4520&hei=2340&fmt=jpeg&qlt=95&.v=1653084303665",
-  //     isNew: true,
-  //   },
-  //   {
-  //     id: 6,
-  //     name: "iPad Pro",
-  //     price: 799,
-  //     rating: 4.7,
-  //     reviewCount: 654,
-  //     image:
-  //       "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/ipad-pro-finish-select-202212-12-9inch-space-gray-wifi?wid=5120&hei=2880&fmt=p-jpg&qlt=80&.v=1670866365263",
-  //   },
-  //   {
-  //     id: 7,
-  //     name: "Apple Watch Series 9",
-  //     price: 399,
-  //     rating: 4.6,
-  //     reviewCount: 432,
-  //     image:
-  //       "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/MPXP3ref_VW_34FR+watch-45-alum-midnight-nc-9s_VW_34FR_WF_CO?wid=2000&hei=2000&fmt=jpeg&qlt=95&.v=1693501322793",
-  //     isNew: true,
-  //   },
-  //   {
-  //     id: 8,
-  //     name: "AirPods Pro (2nd Gen)",
-  //     price: 249,
-  //     rating: 4.8,
-  //     reviewCount: 987,
-  //     image:
-  //       "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/MQD83?wid=2000&hei=2000&fmt=jpeg&qlt=95&.v=1660803972361",
-  //   },
-  // ];
+  if (isLoading) return <div>Loading products...</div>;
+  if (error) return <div>Error:</div>;
 
   const toggleFavorite = (productId: number) => {
     setIsFavoriteMap((prev) => ({
