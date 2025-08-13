@@ -8,6 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import axiosInstance from "../../config/axios";
 import GoogleLoginButton from "./GoogleLoginButton";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 interface LoginForm {
   email: string;
@@ -22,6 +23,7 @@ interface FormErrors {
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const [, setAccessToken] = useLocalStorage("access_token", "");
 
   // Form data with TypeScript interface
   const [form, setForm] = useState<LoginForm>({
@@ -92,7 +94,7 @@ const LoginPage = () => {
           password: form.password,
         });
       console.log(response);
-      localStorage.setItem("access_token", response.accessToken);
+      setAccessToken(response.accessToken);
       localStorage.setItem("refresh_token", response.refreshToken);
 
       // Redirect after successful login

@@ -42,6 +42,8 @@ axiosInstance.interceptors.response.use(
         return;
       }
     }
+    window.location.href = "/login";
+
     console.error("HTTP Error:", error);
     return Promise.reject(error);
   }
