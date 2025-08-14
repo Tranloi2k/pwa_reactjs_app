@@ -24,13 +24,13 @@ jobs:
 
       - name: Run DependencyCheck
         run: |
-          ./dependency-check/bin/dependency-check.sh --project "PWA ReactJS App" --scan . --format "HTML" --out dependency-check-report.html
+          ./dependency-check/bin/dependency-check.sh --project "PWA ReactJS App" --scan . --format HTML --out dependency-check-report.html
 
       - name: Upload Dependency Check Report
         uses: actions/upload-artifact@v4
         if: always() # Upload ngay cả khi có lỗi
         with:
-          name: dependency-check-report-${{ github.run_number }}
+          name: dependency-check-report
           path: dependency-check-report.html
           retention-days: 30
 
