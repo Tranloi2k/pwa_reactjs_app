@@ -121,10 +121,10 @@ export default {
         minifyCSS: true,
       },
     }),
-    // new InjectManifest({
-    //   swSrc: "./src/serviceWorker.js",
-    //   swDest: "service-worker.js",
-    // }),
+    new InjectManifest({
+      swSrc: "./src/serviceWorker.js",
+      swDest: "service-worker.js",
+    }),
     new CopyWebpackPlugin({
       patterns: [
         { from: "public/manifest.json", to: "manifest.json" },
