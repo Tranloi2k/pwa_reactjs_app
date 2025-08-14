@@ -24,7 +24,7 @@ jobs:
 
       - name: Run DependencyCheck
         run: |
-          ./dependency-check/bin/dependency-check.sh --project "PWA ReactJS App" --scan . --format HTML --out dependency-check-report.html
+          ./dependency-check/bin/dependency-check.sh --cveValidForHours 2 --project "PWA ReactJS App" --scan . --format HTML --out dependency-check-report.html
 
       - name: Upload Dependency Check Report
         uses: actions/upload-artifact@v4
