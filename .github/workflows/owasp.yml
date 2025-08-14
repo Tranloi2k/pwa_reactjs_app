@@ -1,31 +1,33 @@
 name: Dependency-Check
+
 on:
   push:
     branches: [master, develop]
   pull_request:
-    types: [opened, synchronize, reopened]
+    branches: [master, develop]
 
 jobs:
   dependency-check:
-    name: Dependency-Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download OWASP Dependency Check
-        run: |
-          VERSION=$(curl -s https://jeremylong.github.io/DependencyCheck/current.txt)
-          curl -sL "https://github.com/jeremylong/DependencyCheck/releases/download/v$VERSION/dependency-check-$VERSION-release.zip" --output dependency-check.zip
-          unzip dependency-check.zip
+      - name: Set DependencyCheck Version
+        run: echo "VERSION=8.2.1" >> $GITHUB_ENV
 
-      - name: Run Dependency Check
-        run: |
-          ./dependency-check/bin/dependency-check.sh --out report.html --scan .
-          rm -rf dependency-check*
+      - name: Download DependencyCheck
+        run: curl -sL "https://github.com/jeremylong/DependencyCheck/releases/download/v${{ env.VERSION }}/dependency-check-${{ env.VERSION }}-release.zip" --output dependency-check.zip
 
-      - name: Upload Artifacts
+      - name: Unzip DependencyCheck
+        run: unzip dependency-check.zip
+
+      - name: Run DependencyCheck
+        run: |
+          ./dependency-check/bin/dependency-check.sh --project "PWA ReactJS App" --scan . --format "ALL" --out dependency-check-report
+
+      - name: Upload Report
         uses: actions/upload-artifact@v4
         with:
           name: dependency-check-report
-          path: report.html
+          path: dependency-check-report
