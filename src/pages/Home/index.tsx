@@ -33,7 +33,7 @@ const Home = () => {
         ) {
           navigator.serviceWorker.controller.postMessage({
             type: "TAB_HIDDEN",
-            title: "Ê, quay lại nào!",
+            title: "Hey, come back!",
             body: "Bạn đang bỏ lỡ nội dung hấp dẫn 😉",
           });
         }
